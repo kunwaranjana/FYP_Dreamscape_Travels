@@ -1,47 +1,154 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+        body {
+            background: url('/Image/mountain.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        .form-container {
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+        }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        .form-container form .field {
+            margin-bottom: 16px;
+        }
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        .form-container form .field label {
+            color: rgb(71, 70, 70);
+            /* color: #fff; */
+            font-size: 17px;
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        }
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+        .form-container form .field input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid;
+            border-radius: 5px;
+            font-size: 14px;  
+            background: rgba(255, 255, 255, 0.2);   
+        }
+
+        .form-container form .field input[type="submit"] {
+            background: #007bff;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-container form .field input[type="submit"]:hover {
+            background: #0056b3;
+        }
+
+        hr {
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+
+        .form-container form .sign-in-div {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .form-container form .sign-in-div p {
+            display: inline;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .form-container form .sign-in-div a {
+            font-size: 15px;
+            color: #0056b3;
+            font-weight: bold;
+            /* text-decoration: none; */
+            margin-left: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+         }
+
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Welcome to Dreamscape</h2>
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email"  value="{{ old('email') }}" placeholder="Enter your email">
+
+            @error('email')
+                <div class="error">{{ $message }}</div>
+            @enderror
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            @error('password')
+                <div class="error">{{ $message }}</div>
+            @enderror
+            </div>
+  
+            <div class="field">
+                <input type="submit" value="Login">
+            </div>
+
+            <hr>
+            <div class="sign-in-div">
+                <p>Don't have account ?</p><a href= "{{ route('register') }}">Sign in</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+ 

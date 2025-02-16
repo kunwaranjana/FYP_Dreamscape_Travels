@@ -28,12 +28,27 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+
+        $url = "/";
+
+        if ($request->user()->role == "admin") {
+            $url = "/admin";
+        }
+
+        return redirect($url);
+        
+        
+        // home page ma liyera janxa
+        // return redirect()->intended(route('home'))->with('success', 'Login successful!');
+
+        // yo paila bata vako default route ho 
+        // return redirect()->intended(route('dashboard', absolute: false));   
     }
 
     /**
      * Destroy an authenticated session.
      */
+    
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

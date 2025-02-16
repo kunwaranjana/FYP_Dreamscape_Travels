@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'contact',
+        'role',
     ];
 
     /**
@@ -45,4 +47,37 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function flightBookings()
+    {
+        return $this->hasMany(FlightBooking::class,'flight_id','id'); // Assumes foreign key 'user_id' in the 'flight_bookings' table
+    }
+
+    public function PackageBooking()
+    {
+        return $this->hasMany(PackageBooking::class,'package_id','id'); // Assumes foreign key 'user_id' in the 'flight_bookings' table
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id','id');
+    }
+
+// hasMany is used when the foreign key is directly in the related model.
+// hasManyThrough is used when the foreign key exists in an intermediate model, and you want to access a distant model via that intermediate model.
+
+    // public function packageCancellationRefunds()
+    // {
+    //     return $this->hasManyThrough(PackageCancellationRefund::class, PackageBooking::class);
+        
+    // }
+
+    // public function flightCancellationRefunds()
+    // {
+    //     return $this->hasManyThrough(FlightCancellationRefund::class, FlightBooking::class);
+       
+    // }
+
+
+
 }
