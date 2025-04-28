@@ -1,0 +1,314 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Flights;
+use Illuminate\Http\Request;
+use App\Services\AmadeusService;
+use Illuminate\Support\Facades\Log;
+
+class FlightController extends Controller
+{
+    protected $amadeusService;
+
+    public function __construct(AmadeusService $amadeusService)
+    {
+        $this->amadeusService = $amadeusService;
+    }
+
+    public function index()
+    {
+        return view('pages.home');
+    }
+
+    
+    public function search(Request $request)
+    {
+        //step:1 validate data after user submits the form 
+        $request->validate([
+            'from_city' => 'required|different:to_city',
+            'to_city' => 'required',
+            'departureDate' => 'required|date|after_or_equal:today',
+            'returnDate' => 'nullable|date|after:departureDate',
+            'adults' => 'required|integer|min:1|max:5',
+        ]);
+
+        //step2: checks wheather the way input is one way ot two way.....
+        $returnDate = $request->input('way') === 'two_way' ? $request->input('returnDate') : null;
+
+        
+        //calls the searchFlights method from the AmadeusService class and passes the required parameters 
+        $flights = $this->amadeusService->searchFlights(
+            $request->input('origin'),
+            $request->input('destination'),
+            $request->input('departureDate'),
+            $returnDate,
+            $request->input('adults')
+        );
+
+        //It stores the result (the flight offers data) in the $flights variable
+        //Error ayo ki nai check garxa ani yo view ma send garxa
+        if (isset($flights['error'])) {
+            return view('pages.flights.results', ['flights' => $flights, 'searchParams' => $request->all()]);
+        }
+        $flightDetails = [];
+        foreach ($flights as $flight) {
+            $segments = $flight->getItineraries()[0]->getSegments();
+            $firstSegment = $segments[0];
+            $lastSegment = end($segments);
+
+
+            $currency = $flight->getPrice()->getCurrency();
+
+            $displayCurrency = $currency;
+            if ($currency !== 'NPR') {
+                $displayCurrency = 'NPR'; // Indicate approximate price
+            }
+
+            $duration = $this->calculateTotalDuration($segments);
+
+            $flightDetails[] = [
+                'carrierCode' => $firstSegment->getCarrierCode(),
+                'flightNumber' => $firstSegment->getNumber(),
+                'departureAirport' => $firstSegment->getDeparture()->getIataCode(),
+                'arrivalAirport' => $lastSegment->getArrival()->getIataCode(),
+                'departureDateTime' => $firstSegment->getDeparture()->getAt(),
+                'arrivalDateTime' => $lastSegment->getArrival()->getAt(),
+                'travelClass' => $segments[0]->getAircraft()->getCode(),
+                'price' => round($flight->getPrice()->getTotal()),
+                'currency' => $displayCurrency,
+                'duration' =>  $duration,
+            ];
+        }
+
+
+        //error xain avani xai yo execute hunxa hai
+        
+        return view('pages.flightList', ['flightDetails' => $flightDetails, 'searchParams' => $request->all()]);
+        // return view('pages.flights.results', ['flightDetails' => $flightDetails, 'searchParams' => $request->all()]);
+    }
+
+    private function calculateTotalDuration($segments)
+    {
+        $totalSeconds = 0;
+        foreach ($segments as $segment) {
+            $departureTime = new \DateTime($segment->getDeparture()->getAt());
+            $arrivalTime = new \DateTime($segment->getArrival()->getAt());
+            $interval = $departureTime->diff($arrivalTime);
+            $totalSeconds += ($interval->h * 3600) + ($interval->i * 60) + $interval->s;
+        }
+
+        $hours = floor($totalSeconds / 3600);
+        $minutes = floor(($totalSeconds % 3600) / 60);
+
+        return sprintf('%dh:%02dm', $hours, $minutes);
+    }
+}
+
+
+
+@extends('layouts.main')
+
+@section('container')
+
+<section class="package-page">
+    <div>
+        <form action="">
+            <div class="filter-bar">
+                <select id="flight-time">
+                    <option value="">Sort by Flight Time</option>
+                    <option value="morning">Morning (6 AM - 12 PM)</option>
+                    <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                    <option value="evening">Evening (6 PM - 12 AM)</option>
+                    <option value="night">Night (12 AM - 6 AM)</option>
+                </select>
+                <select id="pricing">
+                    <option value="">Sort by Pricing</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+                <select id="airlines">
+                    <option value="">Sort by Airlines</option>
+                    <option value="airline-a">Airline A</option>
+                    <option value="airline-b">Airline B</option>
+                    <option value="airline-c">Airline C</option>
+                </select>
+                <select id="class">
+                    <option value="">Sort by Class</option>
+                    <option value="economy">Economy</option>
+                    <option value="business">Business</option>
+                    <option value="first-class">First Class</option>
+                </select>
+            </div>
+        </form> 
+    </div>
+
+    <div>     
+        @if(isset($flights['error']))
+            <p>Error: {{ $flights['error'] }}</p>
+        @elseif(empty($flightDetails))
+            <p>No flights found.</p>
+        @else
+            <div>   
+                @foreach($flightDetails as $flight)
+                    <div class="ticket">
+                        <div class="ticketCardOne">
+                            <label class="departDate">Depart Date: {{ date('Y-m-d', strtotime($flight['departureDateTime'])) }}</label>
+                            <label class="departTime">Depart Time: {{ date('H:i', strtotime($flight['departureDateTime'])) }}</label>
+                            <label class="departAirport">Depart Airport: {{ $flight['departureAirport'] }}</label>
+
+                            <label class="duration">{{ $flight['duration'] }}</label>
+                            <hr class="line">
+
+                            <label class="arrivalDate">Arrival Date: {{ date('Y-m-d', strtotime($flight['arrivalDateTime'])) }}</label>
+                            <label class="arrivalTime">Arrival Time: {{ date('H:i', strtotime($flight['arrivalDateTime'])) }}</label>
+                            <label class="arrivalAirport">Arrival Airport: {{ $flight['arrivalAirport'] }}</label>
+
+                            <label class="flightCode">{{ $flight['flightCode'] }}</label>
+                            <label class="airlineName">Airline: {{ $flight['airlineName'] }}</label>
+                            <label class="class"> {{ $flight['travelClass'] }}</label>
+                            <label class="price">Price: {{ $flight['price'] }} {{ $flight['currency'] }}</label>
+                        </div>
+                    </div>
+                    <button type="submit">Book Now</button>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+
+</section>
+
+@endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Services;
+
+use Amadeus\Amadeus;
+use Amadeus\Exceptions\ResponseException;
+
+class AmadeusService
+{
+    protected $amadeus;
+
+    public function __construct()
+    {
+        $this->amadeus = Amadeus::builder(
+            env('AMADEUS_API_KEY'),
+            env('AMADEUS_API_SECRET')
+        )->build();
+    }
+
+    public function searchFlights($origin, $destination, $departureDate, $returnDate = null, $adults = 1)
+    {
+        try {
+            return $this->amadeus->getShopping()->getFlightOffers()->get([
+                'originLocationCode' => $origin,
+                'destinationLocationCode' => $destination,
+                'departureDate' => $departureDate,
+                'returnDate' => $returnDate,
+                'adults' => $adults,
+                'max' => 5,
+                'currencyCode' => 'NPR'
+            ]);
+        } catch (ResponseException $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function getAirlineName($carrierCode)
+    {
+        try {
+            $response = $this->amadeus->getReferenceData()->getAirlines()->get([
+                'airlineCodes' => $carrierCode
+            ]);
+    
+            if (!empty($response)) {
+                return $response[0]->getBusinessName();
+            }
+        } catch (\Exception $e) {
+            // Log or silently fail
+        }
+    
+        return $carrierCode; // fallback
+    }
+
+    
+
+    // public function priceFlightOffer($flightOffer)
+    // {
+    //     try {
+    //         return $this->amadeus->getShopping()->getFlightOffers()->getPricing()->post(
+    //             json_encode([
+    //                 'data' => [
+    //                     'type' => 'flight-offers-pricing',
+    //                     'flightOffers' => [$flightOffer]
+    //                 ]
+    //             ])
+    //         );
+    //     } catch (ResponseException $e) {
+    //         return ['error' => $e->getMessage()];
+    //     }
+    // }
+
+
+    // public function bookFlight($flightOffer, $travelers)
+    // {
+    //     try {
+    //         return $this->amadeus->getBooking()->getFlightOrders()->post(
+    //             json_encode([
+    //                 'data' => [
+    //                     'type' => 'flight-order',
+    //                     'flightOffers' => [
+    //                         [
+    //                             'id' => $flightOffer->getId(),
+    //                             'type' => $flightOffer->getType(),
+    //                             'offerItems' => $flightOffer->getOfferItems(),
+    //                         ],
+    //                     ],
+    //                     'travelers' => $travelers,
+    //                 ],
+    //             ])
+    //         );
+    //     } catch (ResponseException $e) {
+    //         return ['error' => $e->getMessage()];
+    //     } catch (\Exception $e) {
+    //         return ['error' => $e->getMessage()];
+    //     }
+    // }
+
+    // public function bookFlight($flightOffer, $travelers)
+    // {
+    //     try {
+    //         return $this->amadeus->getBooking()->getFlightOrders()->post(
+    //             json_encode([
+    //                 'data' => [
+    //                     'type' => 'flight-order',
+    //                     'flightOffers' => [$flightOffer],
+    //                     'travelers' => $travelers
+    //                 ]
+    //             ])
+    //         );
+    //     } catch (ResponseException $e) {
+    //         return ['error' => $e->getMessage()];
+    //     }
+    // }
+}
+

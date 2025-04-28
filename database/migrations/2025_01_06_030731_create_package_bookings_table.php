@@ -15,13 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('package_id');
-            $table ->date('booking_date');
+            // $table ->date('booking_date');
+            $table->date('booking_date');
+            $table ->integer('travelerCount');
             $table->float('amount');
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
         });
+
+        // booking_date vaneko yo din lai booking gareko raixa
     }
 
     /**
@@ -31,4 +34,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('package_bookings');
     }
+
+
+
 };

@@ -7,8 +7,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "amadeus4dev/amadeus-php": "^0.3.0",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "jenssegers/date": "^2.0",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "mpdf/mpdf": "^6.1",
+        "xentixar/esewa-sdk": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class FlightBooking extends Model
 {
     protected $fillable = [
-        'user_id',
-        'flight_id',
-        'booking_date',
-        'amount',
+        'reference_code',
+        'flight_number',
+        'airline_name',
+        'departure_airport',
+        'arrival_airport',
+        'departure_datetime',
+        'arrival_datetime',
+        'travel_class',
+        'price',
+        'currency',
+        'user_id', // optional, if you associate with users
     ];
 
   
@@ -19,11 +26,18 @@ class FlightBooking extends Model
         return $this->belongsTo(User::class, 'user_id','id');
     }
 
-  
-    public function flight()
+    public function passengers()
     {
-        return $this->belongsTo(Flights::class, 'flight_id','id');
+        return $this->hasMany(Passenger::class);
     }
+
+    public function payment()
+{
+    return $this->hasOne(FlightPayment::class);
+}
+
+
+  
 }
 
     

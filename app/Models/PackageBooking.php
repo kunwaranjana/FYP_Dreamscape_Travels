@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 
 class PackageBooking extends Model
@@ -10,6 +9,7 @@ class PackageBooking extends Model
         'user_id',
         'package_id',
         'booking_date',
+        'travelerCount',
         'amount',
     ];
 
@@ -19,9 +19,16 @@ class PackageBooking extends Model
         return $this->belongsTo(User::class, 'user_id','id');
     }
 
-  
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id','id');
     }
+
+    public function payment()
+    {
+        return $this->hasOne(PackagePayment::class, 'package_id', 'package_id');
+    }
+    
+    
+    
 }

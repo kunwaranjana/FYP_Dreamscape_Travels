@@ -1,7 +1,6 @@
 
 <footer>  
     <div class="footer-content  ">
-
         <div class="logo">
             <img src="/Image/logo.png" alt="Logo" height="100cm" width="200cm">
         </div>

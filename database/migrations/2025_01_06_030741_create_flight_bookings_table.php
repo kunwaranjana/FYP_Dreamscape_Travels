@@ -6,21 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('flight_bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('flight_id');
-            $table ->date('booking_date');
-            $table->float('amount');
-            $table->timestamps();
-
+            $table->string('reference_code')->unique();
+            $table->string('flight_number');
+            $table->string('airline_name');
+            $table->string('departure_airport');
+            $table->string('arrival_airport');
+            $table->dateTime('departure_datetime');
+            $table->dateTime('arrival_datetime');
+            $table->string('travel_class');
+            $table->integer('price');
+            $table->string('currency');
+            $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('flight_id')->references('id')->on('flights')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

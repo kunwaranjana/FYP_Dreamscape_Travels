@@ -1,0 +1,424 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+    border: 1px solid rgb(206, 202, 202)
+}
+
+/* aside css */
+aside {
+    width: 280px;
+    background-color:white;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+.logo-div img {
+    width: 200px;
+    margin-bottom: 2rem;
+}
+
+.nav-links {
+    /* width: 100%; */
+    max-width: 280px;
+}
+
+/* unset all garnu ko reason xai yo part boostrap le override gareko thiyo tesaile  */
+/* .nav-links .head h4{
+    all: unset;
+    color: rgb(184, 174, 174);
+    margin-top: 25px !important;;
+    margin-bottom: 15px !important;;
+} */
+
+
+.nav-links .nav-link h4{
+    color: rgb(184, 174, 174);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+.link{
+    background-color:#ecf0f1;
+    border-radius: 8px;
+    color:rgb(51, 49, 49);
+    font-size: 18px;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.link.active-link {
+    background-color: #4489ba;
+    color: white;
+    font-weight: bold;
+}
+
+.link.active-link a {
+    color: white;
+}
+
+
+
+
+.link a {
+    display: block;
+    color:rgb(51, 49, 49);
+    font-size: 18px;
+    text-decoration: none;
+    display: flex;
+    gap: 20px;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    white-space: nowrap;   /* 🔥 Prevents line breaks */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* aside css ends here */
+
+
+
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 20px;
+    background: #ecf0f1;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #f1f1f1;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    padding: 5px;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar button i {
+    color: #2c3e50;
+}
+
+
+/* main > content-area yo header pachi ko part ho*/
+.content-area{
+    padding: 1rem 1rem;
+    background: #ecf0f1;
+    /* background-color: teal; */
+}
+
+
+
+.content{
+    display: flex;
+    justify-content: center;
+    /* background-color: #007bff; */
+}
+
+
+
+
+/*FFFFFFFFFFOOOOOOOOOOORRRRRRRRRRRRMMMMMMMMMMMM*/
+
+.form-containerr {
+    background: white;
+    padding: 30px 40px 15px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 700px;
+}
+
+.form-containerr h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    color:rgb(51, 49, 49);
+}
+
+.form-containerr .data-form {
+    display: flex;
+    flex-direction: column;
+}
+/* 
+.form-containerr .data-form .field {
+    margin-bottom: 16px;
+
+}
+
+.form-containerr .data-form .field label {
+    color: rgb(71, 70, 70);
+    font-size: 18px;
+
+}
+
+.form-containerr .data-form .field input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 16px; 
+    background: rgba(255, 255, 255, 0.2);           
+}
+
+
+.form-containerr .data-form .field textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 16px; 
+    background: rgba(255, 255, 255, 0.2);           
+} */
+
+.field-btn {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.field-btn button {
+    width: 120px; 
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    background-color: #4489ba;
+    color: white;
+}
+
+.field-btn button:hover {
+    background: #1f76d2;    
+}
+
+
+
+/* main > content-area > Table Container > form   */
+.table-container {
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    padding: 20px;
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
+    overflow-x: auto; 
+    white-space: nowrap;
+}
+
+.table-head{
+    display: flex;
+    align-items: center;
+    justify-content:space-between ;
+    margin-bottom: 2rem;
+}
+
+.table-head h2{
+    font-size: 20px;
+    font-weight: 700;
+    color:rgb(51, 49, 49);
+}
+
+.table-head a{
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4489ba;
+    border: 1px solid #4489ba;
+    color: white; 
+}
+
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+/* Table Header */
+thead {
+    background-color: #4489ba;
+    color: white;
+    text-align: left;
+}
+
+thead th {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    /* text-transform: uppercase; */
+    border-bottom: 2px solid #ccc;
+}
+
+/* Table Body */
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background: #e9ecef;
+}
+
+/* Table Cells */
+td {
+    padding: 12px;
+    font-size: 15px;
+    color: #333;
+}
+
+/* Image Column */
+/* td:nth-child(4) {
+    text-align: center;
+} */
+
+.truncate-description {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+td img {
+    width: 50px;
+    height: auto;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions a {
+    text-decoration: none;
+    text-align: left;
+}
+
+.edit-btn {
+    padding: 6px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #ffc107;
+    color: black;
+    border: 1px solid #ffc107;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.dlt-btn {
+    padding: 6px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.dlt-btn:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+    
+    .actions a {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    thead th {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 10px;
+    }
+}
+
+
+/* yo userlist page ko box ho  */
+.user-count-box {
+    display: inline-block;
+    background-color: #4489ba;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.pagination-wrapper{
+    margin-top: 2rem;
+}
+
+
+/* <div class="pagination-wrapper">
+{{ $packages->links() }}
+</div> */
+
+/* $packages = Package::paginate(5); */
+
+

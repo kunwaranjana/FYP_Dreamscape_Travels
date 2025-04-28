@@ -14,4 +14,15 @@ class Package extends Model
         'price',
         'duration',
     ];
+
+
+    // Package can have multiple booking
+    public function bookings()
+    {
+        return $this->hasMany(PackageBooking::class, 'package_id'); // Ensure it refers to 'package_id'
+    }
+
 }
+
+
+

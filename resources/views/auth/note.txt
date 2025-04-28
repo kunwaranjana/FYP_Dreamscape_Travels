@@ -1,7 +1,5 @@
 here already existed registration and login code 
-i will not be using tailwind so i will stored it here in case i need this code in future
-
-
+i will not be using tailwind so i will stored it here in case i need this code in future.
 
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
